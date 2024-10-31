@@ -10,7 +10,7 @@ in th file [otel-collector.yaml](./otel-collector/otel-collector.yaml) you can c
 ```yaml
 exporters:
   debug:
-    verbosity: detailed # none, basic, detailed
+    verbosity: detailed # basic, normal, detailed
 ```
 
 and what to log to the console by commenting out piplines:
