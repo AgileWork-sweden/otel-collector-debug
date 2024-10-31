@@ -34,6 +34,12 @@ service:
       exporters: [debug]
 ```
 
+Configure your app to send the otlp signals to the collector on localhost with port:
+- 4317 for `grpc`
+- 4318 for `http`
+  
+  ***grpc is preferred***
+
 ## Get started
 run `docker compose up` or in detached mode `docker compose up -d`
 
