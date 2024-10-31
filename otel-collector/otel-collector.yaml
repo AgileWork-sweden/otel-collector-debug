@@ -1,0 +1,62 @@
+receivers:
+  otlp:
+    protocols:
+      # gRPC receiver
+      grpc:
+      # HTTP receiver
+      http:
+        cors:
+          allowed_origins:
+            - "http://*"
+            - "https://*"
+
+exporters:
+  debug:
+    verbosity: detailed # none, basic, detailed
+
+  otlp:
+    endpoint: "tempo:4200"
+    tls:
+      insecure: true
+
+processors:
+  attributes/loki:
+    actions:
+      - action: insert
+        key: loki.attribute.labels
+        value: container, exception.type
+
+  resource/loki:
+    attributes:
+      - action: insert
+        key: loki.resource.labels
+        value: service.name, service.version
+  
+  resourcedetection:
+    detectors: [env]
+    override: false  # set to true to override existing resource attributes
+
+  batch:
+
+connectors:
+  spanmetrics:
+
+extensions:
+  health_check:
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [debug, spanmetrics]
+
+    metrics:
+      receivers: [otlp, spanmetrics]
+      processors: [batch]
+      exporters: [debug] 
+
+    logs:
+      receivers: [otlp]
+      processors: [batch, resource/loki, attributes/loki]
+      exporters: [debug]

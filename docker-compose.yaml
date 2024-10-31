@@ -1,0 +1,22 @@
+version: "3.9"
+
+networks:
+  observability-net:
+    driver: bridge
+
+services:
+  #open telemetry collector
+  otel-collector:
+    image: docker.io/otel/opentelemetry-collector-contrib:latest
+    restart: always
+    command: --config=/etc/otel-collector.yaml
+    environment:
+      - OTEL_RESOURCE_ATTRIBUTES=service.name=otel-server-test,host.name=localhost
+    volumes:
+      - ./otel-collector/otel-collector.yaml:/etc/otel-collector.yaml
+    ports:
+      - "4317:4317" # otlp grpc
+      - "4318:4318" # otlp http
+    networks:
+      - observability-net
+
