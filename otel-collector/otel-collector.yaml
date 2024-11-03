@@ -12,7 +12,7 @@ receivers:
 
 exporters:
   debug:
-    verbosity: detailed # none, basic, detailed
+    verbosity: detailed # basic, normal, detailed
 
   otlp:
     endpoint: "tempo:4200"
